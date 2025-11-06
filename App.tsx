@@ -89,7 +89,10 @@ const App: React.FC = () => {
 
   return (
     <div className="w-screen h-screen bg-slate-900 flex flex-col items-center justify-center overflow-auto">
-      <main className="w-full h-full max-w-lg mx-auto bg-slate-800 shadow-2xl shadow-black/50">
+      <main
+        className="w-full h-full max-w-lg mx-auto bg-slate-800 shadow-2xl shadow-black/50 pb-6"
+        style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1.5rem)' }}
+      >
         {renderContent()}
       </main>
     </div>
