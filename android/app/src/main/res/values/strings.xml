@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">tesouroQR</string>
+    <string name="title_activity_main">tesouroQR</string>
+    <string name="package_name">com.lucastambasco.tesouroqr</string>
+    <string name="custom_url_scheme">com.lucastambasco.tesouroqr</string>
+</resources>

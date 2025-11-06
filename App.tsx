@@ -6,12 +6,25 @@ import { TreasureMapIcon } from './components/icons';
 
 type Mode = 'menu' | 'setup' | 'play';
 
-const DEFAULT_HUNT_STEPS: HuntStep[] = [
-  { id: '1', qrCodeValue: 'start', hintImageUrl: 'https://picsum.photos/seed/adventure/800/600' },
-  { id: '2', qrCodeValue: 'clue1', hintImageUrl: 'https://picsum.photos/seed/mystery/800/600' },
-  { id: '3', qrCodeValue: 'clue2', hintImageUrl: 'https://picsum.photos/seed/journey/800/600' },
-  { id: '4', qrCodeValue: 'treasure', hintImageUrl: 'https://picsum.photos/seed/gold/800/600' },
+const DEFAULT_QR_CODES = [
+  'tesouroQR-start',
+  'tesouroQR-01',
+  'tesouroQR-02',
+  'tesouroQR-03',
+  'tesouroQR-04',
+  'tesouroQR-05',
+  'tesouroQR-06',
+  'tesouroQR-07',
+  'tesouroQR-08',
+  'tesouroQR-09',
+  'tesouroQR-10',
 ];
+
+const DEFAULT_HUNT_STEPS: HuntStep[] = DEFAULT_QR_CODES.map((code) => ({
+  id: code,
+  qrCodeValue: code,
+  hintImageUrl: `/QRcodes/${code}.png`,
+}));
 
 const App: React.FC = () => {
   const [mode, setMode] = useState<Mode>('menu');

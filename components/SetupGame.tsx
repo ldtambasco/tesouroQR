@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { HuntStep } from '../types';
 import { PlusIcon, TrashIcon, SaveIcon, ArrowLeftIcon } from './icons';
 
@@ -22,8 +22,36 @@ const PREDEFINED_QR_CODES = [
   'tesouroQR-10',
 ];
 
+const getDefaultHintForCode = (code: string) => `/QRcodes/${code}.png`;
+
+const buildInitialSteps = (inputSteps: HuntStep[]): HuntStep[] => {
+  if (!inputSteps.length) {
+    return PREDEFINED_QR_CODES.map((code) => ({
+      id: code,
+      qrCodeValue: code,
+      hintImageUrl: getDefaultHintForCode(code),
+    }));
+  }
+
+  return inputSteps.map((step, index) => {
+    const fallbackCode = PREDEFINED_QR_CODES[index] ?? step.qrCodeValue;
+    const qrCodeValue = step.qrCodeValue || fallbackCode || '';
+    const hintImageUrl = step.hintImageUrl || (qrCodeValue ? getDefaultHintForCode(qrCodeValue) : '');
+    return {
+      ...step,
+      qrCodeValue,
+      hintImageUrl,
+    };
+  });
+};
+
 const SetupGame: React.FC<SetupGameProps> = ({ initialSteps, onSave, onBack }) => {
-  const [steps, setSteps] = useState<HuntStep[]>(initialSteps);
+  const preparedInitialSteps = useMemo(() => buildInitialSteps(initialSteps), [initialSteps]);
+  const [steps, setSteps] = useState<HuntStep[]>(preparedInitialSteps);
+
+  useEffect(() => {
+    setSteps(preparedInitialSteps);
+  }, [preparedInitialSteps]);
 
   const handleStepChange = (index: number, field: keyof Omit<HuntStep, 'id'>, value: string) => {
     const newSteps = [...steps];
@@ -32,7 +60,17 @@ const SetupGame: React.FC<SetupGameProps> = ({ initialSteps, onSave, onBack }) =
   };
 
   const addStep = () => {
-    setSteps([...steps, { id: Date.now().toString(), qrCodeValue: '', hintImageUrl: '' }]);
+    const usedCodes = new Set(steps.map((step) => step.qrCodeValue));
+    const nextCode = PREDEFINED_QR_CODES.find((code) => !usedCodes.has(code));
+    const id = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    setSteps([
+      ...steps,
+      {
+        id,
+        qrCodeValue: nextCode || '',
+        hintImageUrl: nextCode ? getDefaultHintForCode(nextCode) : '',
+      },
+    ]);
   };
 
   const removeStep = (index: number) => {
@@ -56,22 +94,6 @@ const SetupGame: React.FC<SetupGameProps> = ({ initialSteps, onSave, onBack }) =
         </button>
         <h1 className="text-2xl font-bold text-amber-300">Configurar Jogo</h1>
       </header>
-      
-      <div className="bg-slate-700 p-4 rounded-lg border border-slate-600 mb-4">
-        <h2 className="text-lg font-semibold text-amber-300 mb-2">Valores dos QR Codes disponíveis</h2>
-        <p className="text-slate-300 text-sm mb-3">
-          Use os códigos abaixo ao preencher o campo "Valor do QR Code" para combinar com as imagens em <code>QRcodes/</code>.
-        </p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          {PREDEFINED_QR_CODES.map((code) => (
-            <div key={code} className="flex items-center justify-between bg-slate-800 border border-slate-600 rounded px-3 py-2">
-              <span className="text-slate-200 text-sm font-mono">{code}</span>
-              <span className="text-slate-400 text-xs">{code}.png</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
       <div className="flex-grow overflow-y-auto pr-2 space-y-4">
         {steps.map((step, index) => (
           <div key={step.id} className="bg-slate-700 p-4 rounded-lg shadow-md border border-slate-600">
