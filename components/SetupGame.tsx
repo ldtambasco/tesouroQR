@@ -8,6 +8,20 @@ interface SetupGameProps {
   onBack: () => void;
 }
 
+const PREDEFINED_QR_CODES = [
+  'tesouroQR-start',
+  'tesouroQR-01',
+  'tesouroQR-02',
+  'tesouroQR-03',
+  'tesouroQR-04',
+  'tesouroQR-05',
+  'tesouroQR-06',
+  'tesouroQR-07',
+  'tesouroQR-08',
+  'tesouroQR-09',
+  'tesouroQR-10',
+];
+
 const SetupGame: React.FC<SetupGameProps> = ({ initialSteps, onSave, onBack }) => {
   const [steps, setSteps] = useState<HuntStep[]>(initialSteps);
 
@@ -43,6 +57,21 @@ const SetupGame: React.FC<SetupGameProps> = ({ initialSteps, onSave, onBack }) =
         <h1 className="text-2xl font-bold text-amber-300">Configurar Jogo</h1>
       </header>
       
+      <div className="bg-slate-700 p-4 rounded-lg border border-slate-600 mb-4">
+        <h2 className="text-lg font-semibold text-amber-300 mb-2">Valores dos QR Codes disponíveis</h2>
+        <p className="text-slate-300 text-sm mb-3">
+          Use os códigos abaixo ao preencher o campo "Valor do QR Code" para combinar com as imagens em <code>QRcodes/</code>.
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          {PREDEFINED_QR_CODES.map((code) => (
+            <div key={code} className="flex items-center justify-between bg-slate-800 border border-slate-600 rounded px-3 py-2">
+              <span className="text-slate-200 text-sm font-mono">{code}</span>
+              <span className="text-slate-400 text-xs">{code}.png</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
       <div className="flex-grow overflow-y-auto pr-2 space-y-4">
         {steps.map((step, index) => (
           <div key={step.id} className="bg-slate-700 p-4 rounded-lg shadow-md border border-slate-600">
