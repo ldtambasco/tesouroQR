@@ -1,0 +1,7 @@
+{
+  "name": "Caça ao Tesouro QR",
+  "description": "A treasure hunt application where players scan QR codes to reveal the next hint image. Game masters can create and customize their own treasure hunts.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
