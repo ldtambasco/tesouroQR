@@ -13,7 +13,7 @@ const DEFAULT_HUNT_STEPS: HuntStep[] = Array.from({ length: 10 }, (_, index) => 
   return {
     id: code,
     qrCodeValue: code,
-    hintImageUrl: `/QRcodes/${code}.png`,
+    hintImageUrl: '',
   };
 });
 
