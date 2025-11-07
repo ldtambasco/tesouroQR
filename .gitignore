@@ -7,3 +7,12 @@ android/.idea/
 .DS_Store
 capacitor.config.json
 .vscode/
+
+# Generated assets and caches
+dist-experimental/
+android/app/build/
+android/app/src/main/assets/public/
+android/app/src/main/assets/public-stable-*/
+android/.gradle/
+**/.idea/
+node_modules/.vite/
