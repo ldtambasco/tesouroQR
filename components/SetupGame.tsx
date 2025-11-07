@@ -8,19 +8,10 @@ interface SetupGameProps {
   onBack: () => void;
 }
 
-const PREDEFINED_QR_CODES = [
-  'tesouroQR-start',
-  'tesouroQR-01',
-  'tesouroQR-02',
-  'tesouroQR-03',
-  'tesouroQR-04',
-  'tesouroQR-05',
-  'tesouroQR-06',
-  'tesouroQR-07',
-  'tesouroQR-08',
-  'tesouroQR-09',
-  'tesouroQR-10',
-];
+const PREDEFINED_QR_CODES = Array.from({ length: 10 }, (_, index) => {
+  const stepNumber = index + 1;
+  return `tesouroQR-${stepNumber.toString().padStart(2, '0')}`;
+});
 
 const getDefaultHintForCode = (code: string) => `/QRcodes/${code}.png`;
 
@@ -35,7 +26,7 @@ const buildInitialSteps = (inputSteps: HuntStep[]): HuntStep[] => {
 
   return inputSteps.map((step, index) => {
     const fallbackCode = PREDEFINED_QR_CODES[index] ?? step.qrCodeValue;
-    const qrCodeValue = step.qrCodeValue || fallbackCode || '';
+    const qrCodeValue = formatCodeFromValue(step.qrCodeValue || fallbackCode || '');
     const hintImageUrl = step.hintImageUrl || (qrCodeValue ? getDefaultHintForCode(qrCodeValue) : '');
     return {
       ...step,
@@ -43,6 +34,18 @@ const buildInitialSteps = (inputSteps: HuntStep[]): HuntStep[] => {
       hintImageUrl,
     };
   });
+};
+
+const formatCodeFromValue = (value: string) => {
+  if (!value) {
+    return '';
+  }
+  const matches = value.match(/(\d+)/);
+  if (!matches) {
+    return value.startsWith('tesouroQR-') ? value : `tesouroQR-${value}`;
+  }
+  const numberOnly = matches[0].padStart(2, '0');
+  return `tesouroQR-${numberOnly}`;
 };
 
 const SetupGame: React.FC<SetupGameProps> = ({ initialSteps, onSave, onBack }) => {
@@ -55,7 +58,8 @@ const SetupGame: React.FC<SetupGameProps> = ({ initialSteps, onSave, onBack }) =
 
   const handleStepChange = (index: number, field: keyof Omit<HuntStep, 'id'>, value: string) => {
     const newSteps = [...steps];
-    newSteps[index] = { ...newSteps[index], [field]: value };
+    const newValue = field === 'qrCodeValue' ? formatCodeFromValue(value) : value;
+    newSteps[index] = { ...newSteps[index], [field]: newValue };
     setSteps(newSteps);
   };
 

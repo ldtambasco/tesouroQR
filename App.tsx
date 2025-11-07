@@ -6,25 +6,16 @@ import { TreasureMapIcon } from './components/icons';
 
 type Mode = 'menu' | 'setup' | 'play';
 
-const DEFAULT_QR_CODES = [
-  'tesouroQR-start',
-  'tesouroQR-01',
-  'tesouroQR-02',
-  'tesouroQR-03',
-  'tesouroQR-04',
-  'tesouroQR-05',
-  'tesouroQR-06',
-  'tesouroQR-07',
-  'tesouroQR-08',
-  'tesouroQR-09',
-  'tesouroQR-10',
-];
-
-const DEFAULT_HUNT_STEPS: HuntStep[] = DEFAULT_QR_CODES.map((code) => ({
-  id: code,
-  qrCodeValue: code,
-  hintImageUrl: `/QRcodes/${code}.png`,
-}));
+const DEFAULT_HUNT_STEPS: HuntStep[] = Array.from({ length: 10 }, (_, index) => {
+  const stepNumber = index + 1;
+  const formattedNumber = stepNumber.toString().padStart(2, '0');
+  const code = `tesouroQR-${formattedNumber}`;
+  return {
+    id: code,
+    qrCodeValue: code,
+    hintImageUrl: `/QRcodes/${code}.png`,
+  };
+});
 
 const App: React.FC = () => {
   const [mode, setMode] = useState<Mode>('menu');
